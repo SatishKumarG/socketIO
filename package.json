@@ -1,0 +1,14 @@
+{
+  "name": "socket IO Example",
+  "version": "0.0.1",
+  "description": "A simple Example using socket.io",
+  "main": "server.js",
+  "author": "Satish",  
+  "dependencies": {
+    "express": "4.7.3",
+    "express": "2.0.1"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
