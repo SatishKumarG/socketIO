@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+      .error{
+        border:2px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript">
+   // var socket = io();
+    var socket = io.connect('http://localhost:3001');
+
+
+
+            /*if (myAppGlobals.account.role == "admin") {
+                socket.on('userInfo', function(data) {
+                    $rootScope.$broadcast('onlineuser-updated', data);
+                });
+            }*/
+
+setInterval(function(){
+    socket.on('userInfo', function(data) {
+ 
+                    console.log('onlineuser-updated', data);
+
+                    
+                      $("#usersdata").html('');
+                      if(data.length!=0){
+
+                      for(var i=0;i<data.length;i++){
+                    
+                        var username=data[i].userId;
+                        var time=data[i].time;
+                        var act=new Date().getTime()-data[i].time;
+                       $("#usersdata").append('<div class="row"><div class="col-sm-4"><input type="text" class="form-control" value="'+username+'"></div><div class="col-sm-4"><input type="text" class="form-control" value="'+new Date().setTime(act)+' Sec"></div></div>') 
+                      }
+
+                    } 
+                   
+
+                    
+                    
+
+    });
+   }, 3000);
+    
+    function setUsername (username) {
+
+      socket.on('connect', function(data) {
+                socket.emit('storeClientInfo', {
+                    userId: username,
+                    time:new Date().getTime()
+                });
+            });
+
+   
+    }
+
+    $( document ).ready(function() {
+        $( "#login" ).click(function() {
+
+          var usr=$("#usr").val();
+          if(usr.trim()==''){
+            $('#usr').addClass('error');
+            //$('#usr').focus();
+          }else{
+             $('#usr').removeClass('error');
+             //socket.username = usr;
+             setUsername(usr);
+             $("#liginBlock").hide();
+             $("#userBlock").show();
+          }
+        
+        });
+    });
+
+
+    
+    </script>
+   <div class="container" id="liginBlock">
+  <h2>Login</h2>
+  <div class="row">
+
+  <form>
+  <div class="col-sm-2"><label for="usr">User Name:</label></div>
+  <div class="col-sm-4"><input type="text" class="form-control" id="usr"></div>
+  <div class="col-sm-4"><button type="button" class="btn btn-primary" id="login">Login</button></div>
+  <div class="col-sm-2"></div>
+   
+  </form>
+  </div>
+</div>
+ <div class="container" id="userBlock" style="display: none">
+ <h2>users:</h2>
+ <div  id="usersdata">
+ </div>
+ </div>
+  </body>
+</html>
